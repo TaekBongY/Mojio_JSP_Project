@@ -93,6 +93,83 @@
             </c:if>
         </div>
 
+        <div id="reply-area">
+            <table align="center" class="list-area">
+                <thead>
+                    <tr>
+                        <th>댓글작성</th>
+                        <c:choose>
+                            <c:when test="${loginUser == null}">
+                                <td>
+                                    <textarea id="reply_content" cols="50" rows="3" style="resize: none;" readonly>로그인 후 댓글 작성이 가능합니다.</textarea>
+                                </td>
+                                <td>
+                                    <button disabled>댓글 등록</button>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td>
+                                    <textarea cols="50" rows="3" style="resize: none;"/>
+                                </td>
+                                <td>
+                                    <button onclick="insertReply(${board.boardNo})">댓글 등록</button>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>user01</td>
+                        <td>안녕하세요</td>
+                        <td>2025.03.05</td>
+                    </tr>
+                </tbody>
+            </table>
+            <script>
+                window.onload = function(){
+                    getReplyList(${board.boardNo})
+                }
+
+                function insertReply(bno){
+                    const content = document.getElementById("reply_content").value;
+
+                    $.ajax({
+                        url : "rinsert.bo",
+                        type : "post",
+                        data : {
+                            boardNo : bno,
+                            content : content
+                        },
+                        success : function(res){
+                            //댓글 입력창 초기화
+                            content="";
+                            //댓글 목록 다시 불러와서 그려주기
+            
+                        },
+                        error : function(error){
+                            console.log("댓글 작성 ajax 통신 실패");
+                        }
+                    })
+                }
+
+                function getReplyList(boardNo){
+                    $.ajax({
+                        url : "rlist.bo",
+                        data : {
+                            bno : boardNo
+                        },
+                        success: function(replyList){
+
+                        },
+                        error : function(){
+                            console.log("댓글 작성 ajax 통신 실패");
+                        }
+                    })
+                }
+            </script>
+        </div>
+
 	</div>
 </body>
 

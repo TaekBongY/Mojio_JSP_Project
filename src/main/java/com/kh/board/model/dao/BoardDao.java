@@ -15,6 +15,7 @@ import com.kh.board.model.vo.Attachment;
 import com.kh.board.model.vo.Board;
 import com.kh.board.model.vo.Category;
 import com.kh.common.vo.PageInfo;
+import com.kh.member.model.vo.Reply;
 
 public class BoardDao {
 	private Properties prop = new Properties();
@@ -427,6 +428,28 @@ public class BoardDao {
 		} finally {
 			close(pstmt);
 		}
+		
+		return result;
+	}
+
+	public int insertReply(Connection conn, Reply r) {
+		int result = 0;	
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("insertReply");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, r.getReplyContent());
+			pstmt.setInt(2, r.getRefBoardNo());
+			pstmt.setInt(3, r.getRepWriter());
+			
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 		return result;
 	}
